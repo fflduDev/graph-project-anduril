@@ -1,6 +1,6 @@
 
 package graph_template;
-
+//test
 import java.util.List;
 
 public interface DiGraph {
