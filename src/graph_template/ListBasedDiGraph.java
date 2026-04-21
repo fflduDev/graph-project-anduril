@@ -101,8 +101,11 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean hasCycles() {
-		// TODO Auto-generated method stub
-		return null;
+		for (GraphNode node : nodeList) {
+			nodeIsReachable(node, node);
+		}
+
+		return false;
 	}
 
 	@Override
