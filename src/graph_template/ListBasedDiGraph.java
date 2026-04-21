@@ -3,7 +3,7 @@ package graph_template;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
- 
+ //Test 2
 
 public class ListBasedDiGraph implements DiGraph {
 	private List<GraphNode> nodeList = new ArrayList<>();
