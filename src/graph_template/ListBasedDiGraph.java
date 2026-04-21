@@ -1,9 +1,7 @@
 
 package graph_template;
+//Test 2
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
- 
 
 public class ListBasedDiGraph implements DiGraph {
 	private List<GraphNode> nodeList = new ArrayList<>();
@@ -23,13 +21,18 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean setNodeValue(GraphNode node, String newNodeValue) {
-		// TODO Auto-generated method stub
-		return null;
+		if (node != null){
+			node.setValue(newNodeValue);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public String getNodeValue(GraphNode node) {
-		// TODO Auto-generated method stub
+		if (node.getValue() != null){
+			return node.getValue();
+		}
 		return null;
 	}
 
