@@ -1,6 +1,6 @@
 
 package graph_template;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
  
@@ -80,7 +80,22 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean nodeIsReachable(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
+		LinkedList<GraphNode> queue = new LinkedList<>();
+		HashSet<GraphNode> visited = new HashSet<>();
+		queue.add(fromNode);
+		visited.add(fromNode);
+		while (!queue.isEmpty()) {
+			GraphNode currentNode = queue.poll();
+			for (GraphNode neighbor : currentNode.getNeighbors()) {
+				if (neighbor.equals(toNode)) {
+					return true;
+				}
+				if (!visited.contains(neighbor)) {
+					visited.add(neighbor);
+					queue.add(neighbor);
+				}
+			}
+		}
 		return null;
 	}
 
