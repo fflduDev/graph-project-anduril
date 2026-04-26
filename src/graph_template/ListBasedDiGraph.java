@@ -53,14 +53,11 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean removeEdge(GraphNode fromNode, GraphNode toNode) {
-		for (GraphNode neighbor : fromNode.getNeighbors()) {
-			if (neighbor.equals(toNode)) {
-				fromNode.removeNeighbor(neighbor);
-				toNode.removeNeighbor(fromNode);
-				return true;
-			}
-		}
-		return null;
+		GraphNode targetFrom = getNode(fromNode.getValue());
+		GraphNode targetTo = getNode(toNode.getValue());
+		if (targetFrom == null || targetTo == null)
+			return false;
+		return targetFrom.removeNeighbor(targetTo);
 	}
 
 	@Override
@@ -77,14 +74,17 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public List<GraphNode> getAdjacentNodes(GraphNode node) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode target = getNode(node.getValue());
+		if (target == null)
+			return null;
+		return target.getNeighbors();
 	}
 
 	@Override
 	public Boolean nodesAreAdjacent(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode targetFrom = getNode(fromNode.getValue());
+		GraphNode targetTo = getNode(toNode.getValue());
+		return targetFrom.getDistanceToNeighbor(targetTo) != null;
 	}
 
 	@Override
@@ -113,7 +113,6 @@ public class ListBasedDiGraph implements DiGraph {
 		for (GraphNode node : nodeList) {
 			nodeIsReachable(node, node);
 		}
-
 		return false;
 	}
 
@@ -123,7 +122,6 @@ public class ListBasedDiGraph implements DiGraph {
 	}
 
 	@Override
-	 
 	public GraphNode getNode(String nodeValue) {
 		for (GraphNode thisNode : nodeList) {
 			if (thisNode.getValue().equals(nodeValue))
