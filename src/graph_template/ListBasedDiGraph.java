@@ -105,13 +105,14 @@ public class ListBasedDiGraph implements DiGraph {
 				}
 			}
 		}
-		return null;
+		return false;
 	}
 
 	@Override
 	public Boolean hasCycles() {
-		for (GraphNode node : nodeList) {
-			nodeIsReachable(node, node);
+		for (GraphNode start : nodeList) {
+			if (nodeIsReachable(start, start))
+				return true;
 		}
 		return false;
 	}
