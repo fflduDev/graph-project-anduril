@@ -88,14 +88,33 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean setEdgeValue(GraphNode fromNode, GraphNode toNode, Integer newWeight) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode targetFrom = getNode(fromNode.getValue());
+		GraphNode targetTo = getNode(toNode.getValue());
+
+		if (targetFrom == null || targetTo == null) {
+			return false;
+		}
+
+		if (targetFrom.getDistanceToNeighbor(targetTo) == null) {
+			return false;
+		}
+
+		targetFrom.removeNeighbor(targetTo);
+		targetFrom.addNeighbor(targetTo, newWeight);
+
+		return true;
 	}
 
 	@Override
 	public Integer getEdgeValue(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return null;
+		GraphNode targetFrom = getNode(fromNode.getValue());
+		GraphNode targetTo = getNode(toNode.getValue());
+
+		if (targetFrom == null || targetTo == null) {
+			return null;
+		}
+
+		return targetFrom.getDistanceToNeighbor(targetTo);
 	}
 
 	@Override
@@ -179,17 +198,96 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public int fewestHops(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return 0;
+		GraphNode start = getNode(fromNode.getValue());
+		GraphNode end = getNode(toNode.getValue());
+
+		if (start == null || end == null) {
+			return -1;
+		}
+
+		if (start.getValue().equals(end.getValue())) {
+			return 0;
+		}
+
+		Queue<GraphNode> queue = new LinkedList<>();
+		Set<GraphNode> visited = new HashSet<>();
+		Map<GraphNode, Integer> hops = new HashMap<>();
+
+		queue.add(start);
+		visited.add(start);
+		hops.put(start, 0);
+
+		while (!queue.isEmpty()) {
+			GraphNode current = queue.poll();
+
+			for (GraphNode neighbor : current.getNeighbors()) {
+				if (!visited.contains(neighbor)) {
+					visited.add(neighbor);
+					hops.put(neighbor, hops.get(current) + 1);
+
+					if (neighbor.getValue().equals(end.getValue())) {
+						return hops.get(neighbor);
+					}
+
+					queue.add(neighbor);
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	@Override
 	public int shortestPath(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		return 0;
+		GraphNode start = getNode(fromNode.getValue());
+		GraphNode end = getNode(toNode.getValue());
+
+		if (start == null || end == null) {
+			return -1;
+		}
+
+		Map<GraphNode, Integer> distances = new HashMap<>();
+		Set<GraphNode> visited = new HashSet<>();
+
+		for (GraphNode node : nodeList) {
+			distances.put(node, Integer.MAX_VALUE);
+		}
+
+		distances.put(start, 0);
+
+		while (visited.size() < nodeList.size()) {
+			GraphNode current = null;
+			int smallestDistance = Integer.MAX_VALUE;
+
+			for (GraphNode node : nodeList) {
+				if (!visited.contains(node) && distances.get(node) < smallestDistance) {
+					smallestDistance = distances.get(node);
+					current = node;
+				}
+			}
+
+			if (current == null) {
+				break;
+			}
+
+			if (current.getValue().equals(end.getValue())) {
+				return distances.get(current);
+			}
+
+			visited.add(current);
+
+			for (GraphNode neighbor : current.getNeighbors()) {
+				if (!visited.contains(neighbor)) {
+					int newDistance = distances.get(current) + current.getDistanceToNeighbor(neighbor);
+
+					if (newDistance < distances.get(neighbor)) {
+						distances.put(neighbor, newDistance);
+					}
+				}
+			}
+		}
+
+		return -1;
 	}
 
- 
-	 
-	
 }
