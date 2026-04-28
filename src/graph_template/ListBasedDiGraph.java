@@ -8,31 +8,59 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean addNode(GraphNode node) {
-		
 		nodeList.add(node);
 		return true;
 	}
 
 	@Override
 	public Boolean removeNode(GraphNode node) {
-		// TODO Auto-generated method stub
-		return null;
+		if (node == null) {
+			return false;
+		}
+
+		GraphNode targetNode = getNode(node.getValue());
+
+		if (targetNode == null) {
+			return false;
+		}
+
+		nodeList.remove(targetNode);
+
+		for (GraphNode thisNode : nodeList) {
+			thisNode.removeNeighbor(targetNode);
+		}
+
+		return true;
 	}
 
 	@Override
 	public Boolean setNodeValue(GraphNode node, String newNodeValue) {
-		if (node != null){
-			node.setValue(newNodeValue);
-			return true;
+		if (node == null) {
+			return false;
 		}
-		return false;
+
+		GraphNode targetNode = getNode(node.getValue());
+
+		if (targetNode == null) {
+			return false;
+		}
+
+		targetNode.setValue(newNodeValue);
+		return true;
 	}
 
 	@Override
 	public String getNodeValue(GraphNode node) {
-		if (node.getValue() != null){
-			return node.getValue();
+		if (node == null) {
+			return null;
 		}
+
+		GraphNode targetNode = getNode(node.getValue());
+
+		if (targetNode != null) {
+			return targetNode.getValue();
+		}
+
 		return null;
 	}
 
