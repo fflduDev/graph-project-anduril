@@ -66,17 +66,15 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
-
-		//BAD
-		fromNode.addNeighbor(toNode, weight);
-		
 		//GOOD
 		GraphNode targetFromNode = getNode(fromNode.getValue());
 		GraphNode targetToNode = getNode(toNode.getValue());
 	 	 
-		targetFromNode.addNeighbor(targetToNode, weight);
+		if (targetFromNode == null || targetToNode == null) {
+			return false;
+		}
 	
-		return true;
+		return targetFromNode.addNeighbor(targetToNode, weight);
 	}
 
 	@Override
@@ -102,6 +100,9 @@ public class ListBasedDiGraph implements DiGraph {
 
 	@Override
 	public List<GraphNode> getAdjacentNodes(GraphNode node) {
+		if (node == null) {
+			return null;
+		}
 		GraphNode target = getNode(node.getValue());
 		if (target == null)
 			return null;
@@ -112,27 +113,44 @@ public class ListBasedDiGraph implements DiGraph {
 	public Boolean nodesAreAdjacent(GraphNode fromNode, GraphNode toNode) {
 		GraphNode targetFrom = getNode(fromNode.getValue());
 		GraphNode targetTo = getNode(toNode.getValue());
+
+		if (targetFrom == null || targetTo == null) {
+			return false;
+		}
+
 		return targetFrom.getDistanceToNeighbor(targetTo) != null;
 	}
 
 	@Override
 	public Boolean nodeIsReachable(GraphNode fromNode, GraphNode toNode) {
+		GraphNode start = getNode(fromNode.getValue());
+		GraphNode end = getNode(toNode.getValue());
+
+		if (start == null || end == null) {
+			return false;
+		}
+
 		LinkedList<GraphNode> queue = new LinkedList<>();
 		HashSet<GraphNode> visited = new HashSet<>();
-		queue.add(fromNode);
-		visited.add(fromNode);
+
+		queue.add(start);
+		visited.add(start);
+
 		while (!queue.isEmpty()) {
 			GraphNode currentNode = queue.poll();
+
 			for (GraphNode neighbor : currentNode.getNeighbors()) {
-				if (neighbor.equals(toNode)) {
+				if (neighbor.getValue().equals(end.getValue())) {
 					return true;
 				}
+
 				if (!visited.contains(neighbor)) {
 					visited.add(neighbor);
 					queue.add(neighbor);
 				}
 			}
 		}
+
 		return false;
 	}
 
