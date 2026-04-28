@@ -64,7 +64,7 @@ public class SuperDuperGraphTester {
 	
 	public static void TESThasCycles() {
 		System.out.println("The graph has " + 
-			       (graph.hasCycles() ? "" : "NO") + " cycles");
+			       (graph.hasCycles() ? "" : "NO ") + "cycles");
 	
 	}
 	

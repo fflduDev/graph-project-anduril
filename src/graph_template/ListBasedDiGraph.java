@@ -176,9 +176,31 @@ public class ListBasedDiGraph implements DiGraph {
 	@Override
 	public Boolean hasCycles() {
 		for (GraphNode start : nodeList) {
-			if (nodeIsReachable(start, start))
-				return true;
+			Queue<GraphNode> queue = new LinkedList<>();
+			Set<GraphNode> visited = new HashSet<>();
+			Map<GraphNode, Integer> distance = new HashMap<>();
+
+			queue.add(start);
+			visited.add(start);
+			distance.put(start, 0);
+
+			while (!queue.isEmpty()) {
+				GraphNode cur = queue.poll();
+
+				for (GraphNode neighbor : cur.getNeighbors()) {
+					if (neighbor.getValue().equals(start.getValue()) && distance.get(cur) >= 1) {
+						return true;
+					}
+
+					if (!visited.contains(neighbor)) {
+						visited.add(neighbor);
+						distance.put(neighbor, distance.get(cur) + 1);
+						queue.add(neighbor);
+					}
+				}
+			}
 		}
+
 		return false;
 	}
 
@@ -205,7 +227,7 @@ public class ListBasedDiGraph implements DiGraph {
 			return -1;
 		}
 
-		if (start.getValue().equals(end.getValue())) {
+		if (start.equals(end)) {
 			return 0;
 		}
 
